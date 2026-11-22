@@ -1,54 +1,52 @@
-import{readFileSync,readdirSync,mkdirSync,writeFileSync}from"node:fs";
-function R(p,g){
-let Q=new Int32Array(576),u=new Uint8Array(65536),s=0,k=0,j=0,z=0,l=0,y=0;
-let E=c=>[c,u.slice(0,l)];
-try{for(;;){
-if(z==1e6)throw 10;
-if(j<0|j>=p.length)throw 9;
-let o=p[j],i=o==1?1:o==2?4:o>47&&o<52?2:0;
-if(j+i>=p.length)throw 9;
-z++;
-let a=o==7?3:[5,6,65].includes(o)||o>15&&o<35&&o!=23&&o!=27?2:[3,4,23,27,49,50,64,80,81,83].includes(o)?1:0;
-let b=o==6||o==7?3:o==4?2:[1,2,64,82].includes(o)||o>15&&o<35?1:0;
-if(s<a)throw 2;
-if(s-a+b>256)throw 3;
-j+=1+i;
-if(o==0)return E(0);
-if(o==1)Q[s++]=p.readInt8(j-1);
-else if(o==2)Q[s++]=p.readInt32LE(j-4);
-else if(o==3)s--;
-else if(o==4){Q[s]=Q[s-1];s++}
-else if(o==5){let t=Q[s-1];Q[s-1]=Q[s-2];Q[s-2]=t}
-else if(o==6){Q[s]=Q[s-2];s++}
-else if(o==7){let t=Q[s-3];Q[s-3]=Q[s-2];Q[s-2]=Q[s-1];Q[s-1]=t}
-else if(o==23)Q[s-1]=-Q[s-1];
-else if(o==27)Q[s-1]=~Q[s-1];
-else if(o>15&&o<35){
-let B=Q[--s],A=Q[s-1],r;
-if(o>18&&o<23){if(!B)throw 4;r=o==19?A/B:o==20?A%B:o==21?(A>>>0)/(B>>>0):(A>>>0)%(B>>>0)}
-else if(o>23&&o<27)r=o==24?A&B:o==25?A|B:A^B;
-else if(o>27&&o<31)r=o==28?A<<(B&31):o==29?A>>(B&31):A>>>(B&31);
-else if(o>31)r=o==32?(A==B?1:0):o==33?(A<B?1:0):(A>>>0)<(B>>>0)?1:0;
-else if(o<19)r=o==16?A+B:o==17?A-B:Math.imul(A,B);
-else throw 5;
-Q[s-1]=r;
-}
-else if(o>47&&o<51){let r=p.readInt16LE(j-2);if(o==48||(o==49)==(Q[--s]==0))j+=r}
-else if(o==51){if(k==64)throw 7;Q[512+k++]=j;j=p[j-2]|p[j-1]<<8}
-else if(o==52){if(!k)throw 8;j=Q[512+--k]}
-else if(o==64){let A=Q[s-1];if(A<0|A>255)throw 6;Q[s-1]=Q[256+A]}
-else if(o==65){let A=Q[s-1],v=Q[s-2];if(A<0|A>255)throw 6;s-=2;Q[256+A]=v}
-else if(o==80){let v=Q[--s]+"";if(l+v.length>65536)throw 11;l+=Buffer.from(v).copy(u,l)}
-else if(o==81){if(l>65535)throw 11;u[l++]=Q[--s]&255}
-else if(o==82)Q[s++]=y<g.length?g[y++]:-1;
-else if(o==83)return E(Q[--s]&255);
-else throw 5;
-}}catch(e){return E(e)}
-}
-const I=process.env.MAKEFUN_INPUT_DIR??"/input",O=process.env.MAKEFUN_OUTPUT_DIR??"/output";
-for(const d of readdirSync(I).sort()){
-let[c,o]=R(readFileSync(I+"/"+d+"/program.bin"),readFileSync(I+"/"+d+"/input.bin"));
-mkdirSync(O+"/"+d,{recursive:true});
-writeFileSync(O+"/"+d+"/stdout.bin",o);
-writeFileSync(O+"/"+d+"/exit.txt",c+"\n");
+import{readdirSync as R,readFileSync as F,writeFileSync as W,mkdirSync as M}from"node:fs";
+const P=process.env,I=P.MAKEFUN_INPUT_DIR||"/input",O=P.MAKEFUN_OUTPUT_DIR||"/output",E=new TextEncoder,T="#4d')-.2        ,,,,,,,(,,,(,,, ,,,             CGGC#           (+              ''$'";
+for(const d of R(I).sort()){
+ const p=F(I+"/"+d+"/program.bin"),u=F(I+"/"+d+"/input.bin"),n=p.length,b=new Uint8Array(65536);
+ let j=0;
+ function V(){
+  const D=new Int32Array(256),S=new Int32Array(64),G=new Int32Array(256);
+  let s=0,g=0,pc=0,ip=0,t=0,v=0,a=0,w=0,i=0;
+  for(;;){
+   if(t==1e6|pc<0|pc>=n)return t==1e6?10:9;
+   const o=p[pc],k=T.charCodeAt(o)-35;
+   if(!(k>=0))return 5;
+   const m=k>>4,f=k>>2&3,h=k&3;
+   if(pc+m>=n)return 9;
+   t++;
+   if(s<f|s-f+h>256)return s<f?2:3;
+   pc+=1+m;w=(p[pc-2]|p[pc-1]<<8)<<16>>16;
+   switch(o){
+    case 0:return 0;
+    case 1:D[s++]=(p[pc-1]<<24)>>24;break;
+    case 2:for(a=i=0;i<4;)a|=p[pc-4+i]<<8*i++;D[s++]=a;break;
+    case 3:s--;break;
+    case 4:case 6:D[s]=D[s-h+1];s++;break;
+    case 5:case 7:a=D[s-h];for(i=s-h;i<s-1;i++)D[i]=D[i+1];D[s-1]=a;break;
+    case 23:D[s-1]=-D[s-1]|0;break;
+    case 27:D[s-1]=~D[s-1];break;
+    case 48:pc+=w;break;
+    case 49:case 50:v=D[--s],pc+=(o==49)^(v==0)?0:w;break;
+    case 51:if(g>63)return 7;S[g++]=pc,pc=w&65535;break;
+    case 52:if(g<1)return 8;pc=S[--g];break;
+    case 64:a=D[s-1];if(a>>>8)return 6;D[s-1]=G[a];break;
+    case 65:a=D[s-1];if(a>>>8)return 6;G[a]=D[s-2];s-=2;break;
+    case 80:v=E.encode(D[s-1]);if(j+v.length>65536)return 11;b.set(v,j),j+=v.length,s--;break;
+    case 81:if(j>65535)return 11;b[j++]=D[--s]&255;break;
+    case 82:D[s++]=ip<u.length?u[ip++]:-1;break;
+    case 83:return D[--s]&255;
+    default:
+     let y=D[--s],x=D[s-1],X=x>>>0,Y=y>>>0,r;
+     if(o<19)r=o==16?x+y|0:o==17?x-y|0:Math.imul(x,y);
+     else if(o<23){if(!y)return 4;r=o==19?x/y|0:o==20?x%y|0:o==21?X/Y|0:X%Y|0}
+     else if(o<27)r=o==24?x&y:o==25?x|y:x^y;
+     else if(o<31)r=o==28?x<<(y&31):o==29?x>>(y&31):x>>>(y&31)|0;
+     else r=o==32?x==y?1:0:o==33?x<y?1:0:X<Y?1:0;
+     D[s-1]=r;break;
+   }
+  }
+ }
+ const e=V();
+ M(O+"/"+d,{recursive:true});
+ W(O+"/"+d+"/stdout.bin",b.slice(0,j));
+ W(O+"/"+d+"/exit.txt",e+"\n");
 }
