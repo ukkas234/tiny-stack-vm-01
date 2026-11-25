@@ -1,36 +1,43 @@
-import{readdirSync as R,readFileSync as F,writeFileSync as W,mkdirSync as K}from'node:fs'
-let{MAKEFUN_INPUT_DIR:I='/input',MAKEFUN_OUTPUT_DIR:O='/output'}=process.env,S='0Aq46:;?!!!!!!!!999999959995999!999!!!!!!!!!!!!!PTTP0!!!!!!!!!!!58!!!!!!!!!!!!!!4414'
-for(let d of R(I)){
-let p=F(I+'/'+d+'/program.bin'),q=F(I+'/'+d+'/input.bin'),n=p.length,D=new Int32Array(256),C=new Int32Array(64),M=new Int32Array(256),o='',s=0,t=0,c=0,pc=0,ip=0,e=0
+import{readdirSync as l,readFileSync as f,mkdirSync as m,writeFileSync as w}from"node:fs";
+import{join as j}from"node:path";
+let{MAKEFUN_INPUT_DIR:I="/input",MAKEFUN_OUTPUT_DIR:O="/output"}=process.env,K="8L|5=:>;~~~~~~~~666666696669666~666~~~~~~~~~~~~~XUUX8~~~~~~~~~~~92~~~~~~~~~~~~~~55<5";
+let R=(p,q)=>{
+let D=new Int32Array(256),C=D.slice(0,64),M=D.slice(),o=[],s=0,k=0,g=0,t=0,y=0,a,b,x,B=[()=>a+b|0,()=>a-b|0,()=>Math.imul(a,b),()=>(a/b)|0,()=>a%b|0,()=>(a>>>0)/(b>>>0)|0,()=>(a>>>0)%(b>>>0)|0,0,()=>a&b,()=>a|b,()=>a^b,0,()=>a<<b,()=>a>>b,()=>a>>>b,0,()=>a==b?1:0,()=>a<b?1:0,()=>a>>>0<b>>>0?1:0];
 for(;;){
-if(s==1e6){e=10;break}
-if(pc<0||pc>=n){e=9;break}
-let a=p[pc],k=S.charCodeAt(a)-48
-if(a>83||k<0){e=5;break}
-if(pc+(k>>4)>=n){e=9;break}
-s++
-let x=pc+1+(k>>4),po=(k>>2)&3,pu=k&3
-if(t<po||t-po+pu>256){e=t<po?2:3;break}
-pc=x
-if(!a){e=0;break}
-else if(a==1)D[t++]=p.readInt8(x-1)
-else if(a==2)D[t++]=p.readInt32LE(x-4)
-else if(a==3)t--
-else if(a==4||a==6){D[t]=D[t-(a==4?1:2)];t++}
-else if(a==5)[D[t-1],D[t-2]]=[D[t-2],D[t-1]]
-else if(a==7)[D[t-3],D[t-2],D[t-1]]=[D[t-2],D[t-1],D[t-3]]
-else if(a==23||a==27)D[t-1]=a==23?-D[t-1]|0:~D[t-1]
-else if(a>15&&a<35){let b=D[t-1],c=D[t-2];if(!b&&a>18&&a<23){e=4;break}let r=a==16?c+b:a==17?c-b:a==18?Math.imul(c,b):a==19?(c/b)|0:a==20?c%b:a==21?(c>>>0)/(b>>>0):a==22?(c>>>0)%(b>>>0):a==24?c&b:a==25?c|b:a==26?c^b:a==28?c<<b:a==29?c>>b:a==30?c>>>b:a==32?c==b?1:0:a==33?c<b?1:0:c>>>0<b>>>0?1:0;D[t-2]=r|0;t--}
-else if(a>47&&a<51){let r=p.readInt16LE(x-2);if(a==48||(a==49)==(D[--t]==0))pc=x+r}
-else if(a==51){if(c==64){e=7;break}C[c++]=x;pc=p[x-2]|p[x-1]<<8}
-else if(a==52){if(!c){e=8;break}pc=C[--c]}
-else if(a>63&&a<66){let v=D[t-1];if(v<0||v>255){e=6;break}if(a==64)D[t-1]=M[v];else{t-=2;M[v]=D[t]}}
-else if(a==80){let g=''+D[t-1];if(o.length+g.length>65536){e=11;break}t--;o+=g}
-else if(a==81){if(o.length>65535){e=11;break}o+=String.fromCharCode(D[--t]&255)}
-else if(a==82)D[t++]=ip<q.length?q[ip++]:-1
-else{e=D[--t]&255;break}
+if(t++==1e6)return[10,o];
+if(p[g]==null)return[9,o];
+let op=p[g],v=K.charCodeAt(op)-48;
+if(v>76|op>83)return[5,o];
+if(g+(v>>4)>=p.length)return[9,o];
+g+=1+(v>>4);
+if(s<(v&3))return[2,o];
+if(s+(v>>2&3)>258)return[3,o];
+if(op<8){
+if(op<3){if(!op)return[0,o];D[s++]=op==1?p.readInt8(g-1):p.readInt32LE(g-4)}
+else if(op==3)s--;
+else if(op==4|op==6){D[s]=D[s-1-(op==6)];s++}
+else if(op==5){a=D[s-1];D[s-1]=D[s-2];D[s-2]=a}
+else{a=D[s-3];D[s-3]=D[s-2];D[s-2]=D[s-1];D[s-1]=a}
+}else if(op<35){
+if(op==23|op==27)D[s-1]=op==23?-D[s-1]|0:~D[s-1];
+else{b=D[s-1];a=D[s-2];if(op>18&op<23&!b)return[4,o];D[s-2]=B[op-16]();s--}
+}else if(op<53){
+if(op<51){if(op==48||(op==49)==(D[--s]==0))g+=p.readInt16LE(g-2)}
+else if(op==51){if(k==64)return[7,o];C[k++]=g;g=p[g-2]|p[g-1]<<8}
+else{if(!k)return[8,o];g=C[--k]}
+}else if(op<66){
+a=D[s-1];if(a>>>0>255)return[6,o];
+if(op==64)D[s-1]=M[a];else{b=D[s-2];s-=2;M[a]=b}
+}else{
+if(op<82){x=op==80?Buffer.from(""+D[--s]):[D[--s]&255];if(o.length+x.length>65536)return[11,o];o.push(...x)}
+else if(op==82)D[s++]=y<q.length?q[y++]:-1;
+else return[D[--s]&255,o];
 }
-K(O+'/'+d,{recursive:true})
-W(O+'/'+d+'/stdout.bin',o,'latin1')
-W(O+'/'+d+'/exit.txt',e+'\n')
+}
+};
+for(let d of l(I)){
+let r=R(f(j(I,d,"program.bin")),f(j(I,d,"input.bin")));
+m(j(O,d),{recursive:true});
+w(j(O,d,"stdout.bin"),Buffer.from(r[1]));
+w(j(O,d,"exit.txt"),r[0]+"\n");
 }
